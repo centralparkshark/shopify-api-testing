@@ -46,7 +46,49 @@ app.get('/', (req, res) => {
 //     status: 'draft'
 // }
 
-// shopify.product.create(newProduct)
+// const productWithVariants = {
+//     title: 'HHC Crewneck2',
+//     body_html: 'sweter',
+//     vendor: 'Jackson',
+//     variants: [
+//         {
+//             option1: "L",
+//             option2: "Gray",
+//             sku: 15670,
+//         },
+//         {
+//             option1: "S",
+//             option2: "Gray",
+//             sku: 15668,
+//         },
+//         {
+//             option1: "L",
+//             option2: "Red",
+//             sku: 15675,
+//         },
+//         {
+//             option1: "S",
+//             option2: "Red",
+//             sku: 15673,
+//         }
+//     ],
+//     options: [
+//         {
+//             name: "Size",
+//             // values: [
+//             //     "XS", "S", "M", "L", "XL", "2XL", "3XL"
+//             // ]
+//         },
+//         {
+//             name: "Color",
+//             // values: [
+//             //     "Gray", "Red"
+//             // ]
+//         }
+//     ]
+// }
+
+// shopify.product.create(productWithVariants)
 // .then(response => {
 //     console.log(("Product created!", response))
 // })
@@ -57,3 +99,5 @@ app.listen(PORT, () => {
     console.log(`Server is running at port ${PORT}...`)
 })
 
+// ideas:
+// use AI to generate tags
