@@ -49,7 +49,7 @@ async function fetchProductBySku(sku) {
     }
 }
 
-async function updateItem(sku){
+async function updateItemQty(sku){
     // use sku to get product id+
     const item = await fetchProductBySku(sku)
     const itemID = item.id
@@ -68,7 +68,7 @@ async function updateItem(sku){
         {
           inventoryItemId: "${inventoryID}"
           locationId: "${location}"
-          quantity: ${tamInfo.qty * 0.1}
+          quantity: ${Math.floor(tamInfo.qty * 0.1)}
         }
       ]
     }) {
@@ -88,7 +88,8 @@ async function updateItem(sku){
 
 }
 
-updateItem(22189)
+// updateItemQty(22189)
+// updateItemQty(15670)
 // fetchProductBySku("15670")
 // fetchProductBySku('15675')
 // fetchProductBySku(15668)

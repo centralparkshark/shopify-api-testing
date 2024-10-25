@@ -11,6 +11,10 @@ export default function tamData(shopifySKU) {
         {
             sku: "22351",
             qty: 88,
+        },
+        {
+            sku: "15670",
+            qty: 904,
         }
     ]
     const foundObj = items.find((item) => item.sku == shopifySKU)
