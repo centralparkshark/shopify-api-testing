@@ -1,23 +1,19 @@
 // npm init
 // npm install dotenv
 // npm i --save shopify-api-node
+// npm i axios 
 
 // import express from 'express'
-import Shopify from 'shopify-api-node'
 import dotenv from 'dotenv'
-// import tamData from './tam.js'
+import axios from 'axios'
+import tamData from './tam.js'
 
 dotenv.config()
 
-const shopify = new Shopify({
-    shopName: 'vmillerstocksync',
-    apiKey: process.env.API_KEY,
-    password: process.env.ADMIN_ACCESS_TOKEN
-})
-
-async function fetchProducts(sku) {
+// return shopify variant id using tam sku
+async function fetchProductBySku(sku) {
     const query = ` query {
-        productVariants(first: 5, query: "sku:${sku}") {
+        productVariants(first: 1, query: "sku:${sku}") {
             edges {
                 node {
                     id
@@ -28,19 +24,45 @@ async function fetchProducts(sku) {
         }
     }`
     try {
-        const response = await shopify.graphql(query)
-        console.log("response", response)
-        const product = response.productVariants.edges;
-        console.log(product)
+        const response = await axios.post(
+            `https://${process.env.SHOP}.myshopify.com/admin/api/2024-10/graphql.json`,
+            {query},
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Shopify-Access-Token': process.env.ADMIN_ACCESS_TOKEN
+                }
+            }
+        )
+        const product = response.data.data.productVariants.edges[0].node
+        return (product.id)
     } catch (error) {
         console.error('Error fetching product', error)
     }
 }
 
-fetchProducts("15670")
-// fetchProducts('15675')
-// fetchProducts(15668)
-// fetchProducts(15673)
+async function updateItem(sku){
+    // use sku to get product id+
+    const item = await fetchProductBySku(sku)
+    const tamInfo = tamData(sku)
+
+    console.log(item, tamInfo)
+    // const updatedVariant = {
+    //     stock: tamInfo.qty
+    // }
+    // try {
+    //     const response = await shopify.productVariant.list(sku)
+    //     console.log('Product Variants:', response)
+    // } catch (error) {
+    //     console.error(error)
+    // }
+}
+
+updateItem(22189)
+// fetchProductBySku("15670")
+// fetchProductBySku('15675')
+// fetchProductBySku(15668)
+// fetchProductBySku(15673)
 
 
 
