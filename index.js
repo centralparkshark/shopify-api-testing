@@ -1,9 +1,12 @@
-import express from 'express'
+// npm init
+// npm install dotenv
+// npm i --save shopify-api-node
+
+// import express from 'express'
 import Shopify from 'shopify-api-node'
 import dotenv from 'dotenv'
+// import tamData from './tam.js'
 
-
-const app = express()
 dotenv.config()
 
 const shopify = new Shopify({
@@ -12,92 +15,53 @@ const shopify = new Shopify({
     password: process.env.ADMIN_ACCESS_TOKEN
 })
 
-const PORT = 3030
+async function fetchProducts(sku) {
+    const query = ` query {
+        productVariants(first: 5, query: "sku:${sku}") {
+            edges {
+                node {
+                    id
+                    title
+                    sku
+                }
+            }
+        }
+    }`
+    try {
+        const response = await shopify.graphql(query)
+        console.log("response", response)
+        const product = response.productVariants.edges;
+        console.log(product)
+    } catch (error) {
+        console.error('Error fetching product', error)
+    }
+}
+
+fetchProducts("15670")
+// fetchProducts('15675')
+// fetchProducts(15668)
+// fetchProducts(15673)
 
 
 
 
-app.get('/', (req, res) => {
-    res.send('<h1>App is running..</h1>')
-})
 
-/*Fetch All Products*/
-// async function fetchProducts() {
-//     try {
-//         const products = await shopify.product.list()
-//         console.log(products)
-//     } catch (error) {
-//         console.error(error)
-//     }
-// }
 
-// app.get('/products', async(req,res) => {
-//     await shopify.product
-//     .list({limit : 5})
-//     .then((products) => res.send(products))
-//     .catch((err) => console.error(err))
+
+
+// const PORT = 3030
+
+// app.get('/', (req, res) => {
+//     res.send('<h1>App is running..</h1>')
 // })
 
-/*Create New Product*/
-// const newProduct = {
-//     title: 'Book',
-//     body_html: 'test djgsjdlgls',
-//     vendor: 'Jackson',
-//     status: 'draft'
-// }
 
-// const productWithVariants = {
-//     title: 'HHC Crewneck2',
-//     body_html: 'sweter',
-//     vendor: 'Jackson',
-//     variants: [
-//         {
-//             option1: "L",
-//             option2: "Gray",
-//             sku: 15670,
-//         },
-//         {
-//             option1: "S",
-//             option2: "Gray",
-//             sku: 15668,
-//         },
-//         {
-//             option1: "L",
-//             option2: "Red",
-//             sku: 15675,
-//         },
-//         {
-//             option1: "S",
-//             option2: "Red",
-//             sku: 15673,
-//         }
-//     ],
-//     options: [
-//         {
-//             name: "Size",
-//             // values: [
-//             //     "XS", "S", "M", "L", "XL", "2XL", "3XL"
-//             // ]
-//         },
-//         {
-//             name: "Color",
-//             // values: [
-//             //     "Gray", "Red"
-//             // ]
-//         }
-//     ]
-// }
 
-// shopify.product.create(productWithVariants)
-// .then(response => {
-//     console.log(("Product created!", response))
+// app.listen(PORT, () => {
+//     console.log(`Server is running at port ${PORT}...`)
 // })
-// .catch(error => console.error(error))
 
 
-app.listen(PORT, () => {
-    console.log(`Server is running at port ${PORT}...`)
-})
 
 // ideas:
-// use AI to generate tags
+// use AI to generate tags, category, type, etc
